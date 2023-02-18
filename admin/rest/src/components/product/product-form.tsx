@@ -1,5 +1,6 @@
 import Input from '@/components/ui/input';
 import TextArea from '@/components/ui/text-area';
+import CKEditor from '@/components/ui/ck-editor';
 import { useForm, FormProvider } from 'react-hook-form';
 import Button from '@/components/ui/button';
 import Description from '@/components/ui/description';
@@ -21,7 +22,7 @@ import { useShopQuery } from '@/data/shop';
 import ProductTagInput from './product-tag-input';
 import { Config } from '@/config';
 import Alert from '@/components/ui/alert';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ProductAuthorInput from './product-author-input';
 import ProductManufacturerInput from './product-manufacturer-input';
 import { EditIcon } from '@/components/icons/edit';
@@ -47,7 +48,13 @@ export default function CreateOrUpdateProductForm({
   const router = useRouter();
   const [isSlugDisable, setIsSlugDisable] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [editorLoaded, setEditorLoaded] = useState<boolean>(false);
+  const [data, setData] = useState<string | null>("");
   const { t } = useTranslation();
+
+  useEffect(() => {
+    setEditorLoaded(true);
+  }, []);
 
   const { data: shopData } = useShopQuery(
     { slug: router.query.shop as string },
@@ -117,6 +124,7 @@ export default function CreateOrUpdateProductForm({
       });
     }
   };
+  
   const product_type = watch('product_type');
   const is_digital = watch('is_digital');
   const is_external = watch('is_external');
@@ -226,11 +234,19 @@ export default function CreateOrUpdateProductForm({
                 />
               )}
               <Input
-                label={`${t('form:input-label-unit')}*`}
+                label={`${t('form:input-label-duration')}*`}
                 {...register('unit')}
                 error={t(errors.unit?.message!)}
                 variant="outline"
                 className="mb-5"
+              />
+
+              <CKEditor
+                name="description"
+                onChange={(data: any) => {
+                  setData(data);
+                }}
+                editorLoaded={editorLoaded}
               />
 
               <TextArea
