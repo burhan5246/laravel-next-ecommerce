@@ -8,6 +8,7 @@ import FileInput from '@/components/ui/file-input';
 import Checkbox from '@/components/ui/checkbox/checkbox';
 import { Config } from '@/config';
 import { useRouter } from 'next/router';
+import Button from '@/components/ui/button';
 
 type IProps = {
   initialValues: any;
@@ -19,6 +20,8 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
     control,
     watch,
     formState: { errors },
+    getValues,
+    setValue,
   } = useFormContext();
   const { t } = useTranslation();
   const { locale } = useRouter();
@@ -26,6 +29,13 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
 
   const is_digital = watch('is_digital');
   const is_external = watch('is_external');
+
+  const calculateQty = () => {
+    const duration = parseFloat(getValues('unit')?.split(' ')[0]) || 0;
+    const qty = parseFloat(getValues('quantity')) || 0;
+    const updatedQty = (duration * qty) / 60;
+    setValue('quantity', parseFloat(updatedQty.toFixed(2)));
+  };
 
   return (
     <div className="my-5 flex flex-wrap sm:my-8">
@@ -36,7 +46,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
             ? t('form:item-description-edit')
             : t('form:item-description-add')
         } ${t('form:form-description-simple-product-info')}`}
-        className="sm:pe-4 md:pe-5 w-full px-0 pb-5 sm:w-4/12 sm:py-8 md:w-1/3"
+        className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
       />
 
       <Card className="w-full sm:w-8/12 md:w-2/3">
@@ -57,17 +67,22 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           className="mb-5"
         />
 
-        <Input
-          label={`${t('form:input-label-quantity')}*`}
-          type="number"
-          {...register('quantity')}
-          error={t(errors.quantity?.message!)}
-          variant="outline"
-          className="mb-5"
-          // Need discussion
-          disabled={isTranslateProduct}
-        />
+        <div className="mb-4">
+          <Input
+            label={`${t('form:input-label-quantity')}*`}
+            type="number"
+            {...register('quantity')}
+            error={t(errors.quantity?.message!)}
+            variant="outline"
+            className="mb-5"
+            // Need discussion
+            disabled={isTranslateProduct}
+          />
 
+          <Button className="mb-5" type="button" onClick={calculateQty}>
+            Calculate
+          </Button>
+        </div>
         <Input
           label={`${t('form:input-label-sku')}*`}
           {...register('sku')}
@@ -131,7 +146,7 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
             />
             <input type="hidden" {...register(`digital_file`)} />
             {errors.digital_file_input && (
-              <p className="my-2 text-xs text-start text-red-500">
+              <p className="my-2 text-xs text-red-500 text-start">
                 {t(errors.digital_file_input?.message!)}
               </p>
             )}

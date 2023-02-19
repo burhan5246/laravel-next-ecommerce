@@ -1,7 +1,7 @@
 import cn from 'classnames';
 import React, { useEffect, useRef } from 'react';
 
-function CKEditor({ onChange, editorLoaded, name, value }: any) {
+function CKEditor({ onChange, editorLoaded, name, value, label, className }: any) {
   const editorRef: any = useRef();
   const { CKEditor, ClassicEditor } = editorRef.current || {
     CKEditor: null,
@@ -16,7 +16,12 @@ function CKEditor({ onChange, editorLoaded, name, value }: any) {
   }, []);
 
   return (
-    <div>
+    <div className={className}>
+        {label && (
+        <label className="block text-body-dark font-semibold text-sm leading-none mb-3">
+          {label}
+        </label>
+      )}
       {editorLoaded ? (
         <CKEditor
           type=""

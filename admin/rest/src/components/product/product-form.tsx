@@ -49,7 +49,11 @@ export default function CreateOrUpdateProductForm({
   const [isSlugDisable, setIsSlugDisable] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [editorLoaded, setEditorLoaded] = useState<boolean>(false);
-  const [data, setData] = useState<string | null>("");
+  const [data, setData] = useState<string | null>('');
+
+  const [input, setInput] = useState<any>({
+    description: initialValues?.description,
+  });
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -82,6 +86,7 @@ export default function CreateOrUpdateProductForm({
     setError,
     watch,
     formState: { errors },
+    getValues,
   } = methods;
 
   const { mutate: createProduct, isLoading: creating } =
@@ -92,7 +97,7 @@ export default function CreateOrUpdateProductForm({
   const onSubmit = async (values: ProductFormValues) => {
     const inputValues = {
       language: router.locale,
-      ...getProductInputValues(values, initialValues),
+      ...getProductInputValues({ ...values, ...input }, initialValues),
     };
 
     try {
@@ -124,11 +129,32 @@ export default function CreateOrUpdateProductForm({
       });
     }
   };
-  
+
   const product_type = watch('product_type');
   const is_digital = watch('is_digital');
   const is_external = watch('is_external');
   const slugAutoSuggest = join(split(watch('name'), ' '), '-').toLowerCase();
+
+  /* const {
+    onChange: onChangeUnit,
+    onBlur: onBlurUnit,
+    name: nameUnit,
+    ref: refUnit,
+  } = register('unit'); */
+
+  const handleDescription = (e: any) => {
+    setInput({
+      ...input,
+      description: e,
+    });
+  };
+
+  /* const handleUnit = (e: any) => {
+    onChangeUnit(e);
+    console.log('eeeeeeeeeeeee', e?.target?.value);
+    setValue("quantity", e?.target?.value.split(" ")[0])
+  }; */
+
   return (
     <>
       {errorMessage ? (
@@ -233,6 +259,7 @@ export default function CreateOrUpdateProductForm({
                   disabled
                 />
               )}
+
               <Input
                 label={`${t('form:input-label-duration')}*`}
                 {...register('unit')}
@@ -241,21 +268,36 @@ export default function CreateOrUpdateProductForm({
                 className="mb-5"
               />
 
+             {/*  <Input
+                onChange={handleUnit} // assign onChange event
+                onBlur={onBlurUnit} // assign onBlur event
+                name={nameUnit} // assign name prop
+                ref={refUnit} // assign ref prop
+                label={`${t('form:input-label-duration')}*`}
+                error={t(errors.unit?.message!)}
+                variant="outline"
+                className="mb-5"
+              /> */}
+
               <CKEditor
-                name="description"
-                onChange={(data: any) => {
+                name={'descriptionName'}
+                /* onChange={(data: any) => {
                   setData(data);
-                }}
+                }} */
+                onChange={handleDescription}
                 editorLoaded={editorLoaded}
+                value={input?.description}
+                label={'Description'}
+                className="mb-5"
               />
 
-              <TextArea
+              {/* <TextArea
                 label={t('form:input-label-description')}
                 {...register('description')}
                 error={t(errors.description?.message!)}
                 variant="outline"
                 className="mb-5"
-              />
+              /> */}
 
               <div>
                 <Label>{t('form:input-label-status')}</Label>
