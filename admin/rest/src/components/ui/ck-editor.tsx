@@ -1,8 +1,10 @@
 import cn from 'classnames';
 import React, { useEffect, useRef } from 'react';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import Editor from 'ckeditor5-custom-build/build/ckeditor';
 
-function CKEditor({ onChange, editorLoaded, name, value, label, className }: any) {
-  const editorRef: any = useRef();
+function CKEditorComp({ onChange, editorLoaded, name, value, label, className }: any) {
+  /* const editorRef: any = useRef();
   const { CKEditor, ClassicEditor } = editorRef.current || {
     CKEditor: null,
     ClassicEditor: null,
@@ -13,7 +15,106 @@ function CKEditor({ onChange, editorLoaded, name, value, label, className }: any
       CKEditor: require('@ckeditor/ckeditor5-react').CKEditor, // v3+
       ClassicEditor: require('@ckeditor/ckeditor5-build-classic'),
     };
-  }, []);
+  }, []); */
+
+  const editorConfiguration = {
+    toolbar: {
+      items: [
+        'heading',
+        '|',
+        'alignment',
+        '|',
+        'fontBackgroundColor',
+        'fontColor',
+        'fontFamily',
+        'highlight',
+        'fontSize',
+        '|',
+        'bold',
+        'italic',
+        'underline',
+        'strikethrough',
+        'subscript',
+        'superscript',
+        'link',
+        '|',
+        'bulletedList',
+        'numberedList',
+        'todoList',
+        '|',
+        'Table',
+        '|',
+        'outdent',
+        'indent',
+        '|',
+        'specialCharacters',
+        '|',
+        'Image',
+        'ImageToolbar',
+        'ImageCaption',
+        'ImageStyle',
+        'imageInsert',
+        '|',
+        'blockQuote',
+        'mediaEmbed',
+        '|',
+        'undo',
+        'redo',
+        '|',
+        'code',
+      ],
+      shouldNotGroupWhenFull: false,
+    },
+    table: {
+      contentToolbar: [
+        'tableColumn',
+        'tableRow',
+        'mergeTableCells',
+        'tableCellProperties',
+        'tableProperties',
+      ],
+    },
+    link: {
+      addTargetToExternalLinks: true,
+    },
+    image: {
+      styles: ['alignLeft', 'alignCenter', 'alignRight', 'full', 'side'],
+      resizeOptions: [
+        {
+          name: 'imageResize:original',
+          value: null,
+          icon: 'original',
+        },
+        {
+          name: 'imageResize:50',
+          value: '50',
+          icon: 'medium',
+        },
+        {
+          name: 'imageResize:75',
+          value: '75',
+          icon: 'large',
+        },
+      ],
+
+      // You need to configure the image toolbar, too, so it shows the new style
+      // buttons as well as the resize buttons.
+      toolbar: [
+        'imageStyle:alignLeft',
+        'imageStyle:alignCenter',
+        'imageStyle:alignRight',
+        'imageStyle:full',
+        'imageStyle:side',
+        '|',
+        'imageResize:50',
+        'imageResize:75',
+        'imageResize:original',
+        '|',
+        'imageTextAlternative',
+        'linkImage',
+      ],
+    },
+  };
 
   return (
     <div className={className}>
@@ -26,7 +127,8 @@ function CKEditor({ onChange, editorLoaded, name, value, label, className }: any
         <CKEditor
           type=""
           name={name}
-          editor={ClassicEditor}
+          editor={Editor}
+          config={editorConfiguration}
           data={value}
           onChange={(event: any, editor: any) => {
             const data = editor.getData();
@@ -41,4 +143,4 @@ function CKEditor({ onChange, editorLoaded, name, value, label, className }: any
   );
 }
 
-export default CKEditor;
+export default CKEditorComp;

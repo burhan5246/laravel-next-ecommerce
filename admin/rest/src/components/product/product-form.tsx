@@ -1,6 +1,6 @@
 import Input from '@/components/ui/input';
 import TextArea from '@/components/ui/text-area';
-import CKEditor from '@/components/ui/ck-editor';
+//import CKEditor from '@/components/ui/ck-editor';
 import { useForm, FormProvider } from 'react-hook-form';
 import Button from '@/components/ui/button';
 import Description from '@/components/ui/description';
@@ -37,6 +37,9 @@ import {
   useUpdateProductMutation,
 } from '@/data/product';
 import { split, join } from 'lodash';
+
+import dynamic from "next/dynamic";
+const CKEditorComp = dynamic(() => import("@/components/ui/ck-editor"), {ssr: false})
 
 type ProductFormProps = {
   initialValues?: Product | null;
@@ -279,7 +282,7 @@ export default function CreateOrUpdateProductForm({
                 className="mb-5"
               /> */}
 
-              <CKEditor
+              <CKEditorComp
                 name={'descriptionName'}
                 /* onChange={(data: any) => {
                   setData(data);
