@@ -506,6 +506,7 @@ export interface Product {
   created_at: string;
   updated_at: string;
   ratings: number;
+  shipping_class_id:number | null;
 }
 
 export interface CreateProduct {
@@ -539,6 +540,7 @@ export interface CreateProduct {
   length?: string;
   width?: string;
   shop_id?: string;
+  shipping_class_id: number | null
 }
 
 export interface AttributeProductPivot {

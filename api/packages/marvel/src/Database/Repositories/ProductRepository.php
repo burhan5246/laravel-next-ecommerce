@@ -79,6 +79,7 @@ class ProductRepository extends BaseRepository
         'in_stock',
         'is_taxable',
         'shop_id',
+        'shipping_class_id',
     ];
 
     public function boot()
@@ -164,6 +165,10 @@ class ProductRepository extends BaseRepository
             }
             if (isset($request['is_digital']) && $request['is_digital'] === true && isset($request['digital_file'])) {
                 $product->digital_file()->create($request['digital_file']);
+            }
+
+            if (isset($request['shipping_class_id '])) {
+                $product->shipping_class_id()->attach($request['shipping_class_id ']);
             }
 
             $product->save();
@@ -291,6 +296,10 @@ class ProductRepository extends BaseRepository
                         'slug' => $stringifySlug
                     ]);
                 }
+            }
+
+            if (isset($request['shipping_class_id '])) {
+                $product->shipping_class_id()->attach($request['shipping_class_id ']);
             }
 
             $product->update($data);

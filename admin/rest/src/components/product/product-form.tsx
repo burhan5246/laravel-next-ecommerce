@@ -16,7 +16,7 @@ import ProductSimpleForm from './product-simple-form';
 import ProductGroupInput from './product-group-input';
 import ProductCategoryInput from './product-category-input';
 import ProductTypeInput from './product-type-input';
-import { ProductType, Product } from '@/types';
+import { ProductType, Product, Shipping } from '@/types';
 import { useTranslation } from 'next-i18next';
 import { useShopQuery } from '@/data/shop';
 import ProductTagInput from './product-tag-input';
@@ -37,16 +37,21 @@ import {
   useUpdateProductMutation,
 } from '@/data/product';
 import { split, join } from 'lodash';
+import SelectInput from '@/components/ui/select-input';
 
-import dynamic from "next/dynamic";
-const CKEditorComp = dynamic(() => import("@/components/ui/ck-editor"), {ssr: false})
+import dynamic from 'next/dynamic';
+const CKEditorComp = dynamic(() => import('@/components/ui/ck-editor'), {
+  ssr: false,
+});
 
 type ProductFormProps = {
   initialValues?: Product | null;
+  shippingClasses: Shipping[];
 };
 
 export default function CreateOrUpdateProductForm({
   initialValues,
+  shippingClasses,
 }: ProductFormProps) {
   const router = useRouter();
   const [isSlugDisable, setIsSlugDisable] = useState<boolean>(true);
@@ -70,6 +75,7 @@ export default function CreateOrUpdateProductForm({
     }
   );
 
+
   const shopId = shopData?.id!;
   const isNewTranslation = router?.query?.action === 'translate';
   const isSlugEditable =
@@ -79,7 +85,14 @@ export default function CreateOrUpdateProductForm({
     resolver: yupResolver(productValidationSchema),
     shouldUnregister: true,
     // @ts-ignore
-    defaultValues: getProductDefaultValues(initialValues!, isNewTranslation),
+    defaultValues: {
+      ...getProductDefaultValues(initialValues!, isNewTranslation),
+      shippingClass: !!shippingClasses?.length
+        ? shippingClasses?.find(
+            (shipping: Shipping) => shipping.id == initialValues?.shipping_class_id
+          )
+        : null,
+    },
   });
   const {
     register,
@@ -113,13 +126,15 @@ export default function CreateOrUpdateProductForm({
           ...inputValues,
           ...(initialValues?.slug && { slug: initialValues.slug }),
           shop_id: shopId || initialValues?.shop_id,
+          shipping_class_id: parseInt(values.shippingClass?.id || "0") || null,
         });
       } else {
         //@ts-ignore
         updateProduct({
           ...inputValues,
           id: initialValues.id!,
-          shop_id: initialValues.shop_id!,
+          shop_id: initialValues.shop_id!,          
+          shipping_class_id: parseInt(values.shippingClass?.id || "0") || null,
         });
       }
     } catch (error) {
@@ -271,7 +286,7 @@ export default function CreateOrUpdateProductForm({
                 className="mb-5"
               />
 
-             {/*  <Input
+              {/*  <Input
                 onChange={handleUnit} // assign onChange event
                 onBlur={onBlurUnit} // assign onBlur event
                 name={nameUnit} // assign name prop
@@ -343,6 +358,27 @@ export default function CreateOrUpdateProductForm({
               initialValues={initialValues}
             />
           )}
+
+          <div className="my-5 flex flex-wrap sm:my-8">
+            <Description
+              title={'Shipping'}
+              details={``}
+              className="w-full px-0 pb-5 sm:w-4/12 sm:py-8 sm:pe-4 md:w-1/3 md:pe-5"
+            />
+
+            <Card className="w-full sm:w-8/12 md:w-2/3">
+              <div className="mb-5">
+                <Label>{t('form:input-label-shipping-class')}</Label>
+                <SelectInput
+                  name="shippingClass"
+                  control={control}
+                  getOptionLabel={(option: any) => option.name}
+                  getOptionValue={(option: any) => option.id}
+                  options={shippingClasses!}
+                />
+              </div>
+            </Card>
+          </div>
 
           <div className="mb-4 text-end">
             {initialValues && (

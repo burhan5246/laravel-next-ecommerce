@@ -11,6 +11,7 @@ import {
   AttachmentInput,
   VariationOption,
   Variation,
+  Shipping
 } from '@/types';
 import groupBy from 'lodash/groupBy';
 import orderBy from 'lodash/orderBy';
@@ -40,6 +41,7 @@ export type ProductFormValues = Omit<
   digital_file_input: AttachmentInput;
   is_digital: boolean;
   slug: string;
+  shippingClass: Shipping | null
 };
 
 export type ProductTypeOption = {
