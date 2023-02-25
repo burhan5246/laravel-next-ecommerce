@@ -178,6 +178,7 @@ export interface Product {
   type: Type;
   price: number;
   sale_price: number;
+  service_charge: number;
   min_price: number;
   max_price: number;
   image: Attachment;
