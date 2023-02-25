@@ -102,6 +102,7 @@ class CreateMarvelTables extends Migration
             $table->foreign('type_id')->references('id')->on('types')->onDelete('cascade');
             $table->double('price')->nullable();
             $table->double('sale_price')->nullable();
+            $table->double('service_charge')->nullable();
             $table->string('sku')->nullable();
             $table->integer('quantity')->default(0);
             $table->boolean('in_stock')->default(true);

@@ -491,6 +491,7 @@ export interface Product {
   is_external?: boolean;
   is_taxable?: boolean;
   sale_price?: number;
+  service_charge?: number;
   sku?: string;
   gallery?: Attachment[];
   image?: Attachment;
@@ -515,6 +516,7 @@ export interface CreateProduct {
   type_id: string;
   price: number;
   sale_price?: number;
+  service_charge?: number;
   quantity?: number;
   unit: string;
   description?: string;

@@ -70,6 +70,7 @@
   "input-label-description": "Description",
   "input-label-price": "Price",
   "input-label-sale-price": "Sale Price",
+  "input-label-service-charge": "Service Charge",
   "input-label-quantity": "Quantity",
   "input-label-unit": "Unit",
   "input-label-duration": "Duration",

@@ -67,6 +67,15 @@ export default function ProductSimpleForm({ initialValues }: IProps) {
           className="mb-5"
         />
 
+        <Input
+          label={t('form:input-label-service-charge')}
+          type="number"
+          {...register('service_charge')}
+          error={t(errors.service_charge?.message!)}
+          variant="outline"
+          className="mb-5"
+        />
+
         <div className="mb-4">
           <Input
             label={`${t('form:input-label-quantity')}*`}

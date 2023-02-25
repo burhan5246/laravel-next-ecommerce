@@ -55,6 +55,7 @@ class ProductRepository extends BaseRepository
         'slug',
         'price',
         'sale_price',
+        'service_charge',
         'max_price',
         'min_price',
         'type_id',
